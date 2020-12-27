@@ -1,0 +1,13 @@
+name: PokemonCatchRateShinyApp
+title: PokemonCatchRateShinyApp
+username:
+account: aelfering
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3431030
+bundleId: 4033217
+url: https://aelfering.shinyapps.io/PokemonCatchRateShinyApp/
+when: 1609095037.3736
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: Pokemon Data Cleaning.R
