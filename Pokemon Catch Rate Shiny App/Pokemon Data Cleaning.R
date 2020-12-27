@@ -1,3 +1,6 @@
+# Pokemon catch rate data frame
+
+# load the packages
 list.of.packages <- c('reactable',
                       'tidyverse',
                       'ggplot2',
@@ -16,11 +19,13 @@ library(ggrepel)
 
 setwd("~/GitHub/Other-Projects/Pokemon Catch Rate Shiny App")
 
+# bring in the data
 pokedex_multiplier <- read.csv('PokeDex Multiplier.csv')
 status_conditions <- read.csv('Status Conditions.csv')
 ball_multipliers <- read.csv('Ball Multiplier.csv')
 pokemon_list <- read.csv('Pokemon List.csv')
 
+# data cleaning
 status_col_names <- c('Status',
                       'Condition')
 
@@ -37,12 +42,11 @@ colnames(pokemon_list) <- pokemon_col_names
 
 pokemon <- dplyr::mutate(pokemon_list, Catch_Rate = as.numeric(gsub('\\*', '', Catch_Rate)))
 
+# create the dataframe and combinations of variables
 catch_rate_values <- unique(as.numeric(pokemon$Catch_Rate))
 ball_values <- unique(as.numeric(ball_multipliers$Rate))
 critical_values <- unique(as.numeric(pokedex_multiplier$Multiplier))
 status_values <- unique(as.numeric(status_conditions$Condition))
-
-# Combinations
 
 percent_health <- seq(0.1, 1, by = 0.1)
 
@@ -58,6 +62,7 @@ colnames(full_df_combos) <- c('Catch_Rate',
                               'PokeDex_Multiplier', 
                               'Status_Condition')
 
+# join the variables names
 full_df_joins <- full_df_combos %>%
   inner_join(pokemon) %>%
   inner_join(ball_multipliers,
