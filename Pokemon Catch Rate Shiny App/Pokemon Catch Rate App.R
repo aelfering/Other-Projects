@@ -47,6 +47,7 @@ server <- function(input, output, session){
                                   SpeciesCaught == input$species,
                                   Percent_Health == input$range)
     
+    # calculate the odds of capture for 1-1,000 throws
     balls_int <- seq(1, 1000) * 1.0
     
     ball_list_test <- list()
@@ -69,6 +70,7 @@ server <- function(input, output, session){
     
     odds_within_throws <- dplyr::mutate(bind.test, Odds = 1-(1-catch_prob)^Ball.Integer)
     
+    # find the minimum balls needed by type to catch within a certain odds
     odds_needed <- odds_within_throws %>%
       filter(Odds >= input$odds) %>%
       group_by(Catch_Rate,
@@ -86,6 +88,7 @@ server <- function(input, output, session){
     regular_balls <- dplyr::filter(odds_needed, Ball_Multipliers == 1)
     dusk_balls <- dplyr::filter(odds_needed, Ball_Multipliers == 3)
     
+    # visualization
     ggplot(subset(odds_within_throws, Odds <= 0.9999),
            aes(x = Ball.Integer,
                y = Odds,
