@@ -120,12 +120,6 @@ ui <- fluidPage(
                           br(),
                           br(),
                           br(),
-                          br(),
-                          br(),
-                          br(),
-                          br(),
-                          br(),
-                          br(),
                           plotOutput("critfreq", width = "100%"),
                           br(),
                           br(),
@@ -246,14 +240,14 @@ server <- function(input, output, session){
                        show.legend = FALSE) +
       scale_color_discrete(labels = c('Poke Ball', 'Ultra Ball', 'Great Ball', 'Dusk Ball*')) +
       scale_y_continuous(labels = scales::percent) +
-      labs(title = paste("The Odds of Catching ", input$pokemon, ' at ', scales::percent(as.numeric(input$range)), ' Health\nwith ', input$status, ' Status', sep = ''),
+      labs(title = paste("The Odds of Catching ", input$pokemon, ' at ', scales::percent(as.numeric(input$range)), ' Health with ', input$status, ' Status', sep = ''),
            subtitle = paste('To have at least a ', scales::percent(as.numeric(input$odds)), ' chance of catching ', input$pokemon, ', you need as few as ', dusk_balls$Ball.Integer, ' Dusk Balls\nor as many as ', regular_balls$Ball.Integer, ' Poke Balls\n', sep = ''),
            color = 'Balls',
            caption = '\nVisualization by Alex Elfering\nData Sources: Formula Courtesy of The Cave of Dragonflies; Bulbapedia, The Pokemon Company and Nintendo\nBased on Generation VIII; Dusk Balls are only effective at night or in a cave',
            y = 'Odds\n',
            x = '\nTotal Poke Ball Throws') +
       theme(plot.title = element_text(face = 'bold', 
-                                      size = 20, 
+                                      size = 18, 
                                       color = 'black',
                                       family = 'Arial'),
             legend.position = 'top',
@@ -264,7 +258,7 @@ server <- function(input, output, session){
                                        family = 'Arial'),
             legend.title = element_text(size = 16, 
                                         family = 'Arial'),
-            plot.subtitle = element_text(size = 19, 
+            plot.subtitle = element_text(size = 17, 
                                          family = 'Arial', 
                                          color = 'black'),
             plot.caption = element_text(size = 16, 
@@ -290,7 +284,7 @@ server <- function(input, output, session){
             panel.grid.major.x = element_line(colour = "#c1c1c1", 
                                               linetype = "dashed")) 
     
-  }, height = 900)
+  }, height = 850)
   
   
   output$critfreq <- renderPlot({
@@ -338,7 +332,7 @@ server <- function(input, output, session){
            x = '',
            y = '\nTotal Throws') +
       theme(plot.title = element_text(face = 'bold', 
-                                      size = 20, 
+                                      size = 18, 
                                       color = 'black',
                                       family = 'Arial'),
             legend.background=element_blank(),
@@ -348,7 +342,7 @@ server <- function(input, output, session){
                                        family = 'Arial'),
             legend.title = element_text(size = 16, 
                                         family = 'Arial'),
-            plot.subtitle = element_text(size = 19, 
+            plot.subtitle = element_text(size = 17, 
                                          family = 'Arial', 
                                          color = 'black'),
             plot.caption = element_text(size = 16, 
@@ -444,13 +438,13 @@ server <- function(input, output, session){
                 vjust = -0.5) +
       coord_flip() +
       scale_y_continuous(labels = scales::percent) +
-      labs(title = paste('How a Critical Catch Impacts Chances of Capturing ', input$pokemon, ' at ', scales::percent(as.numeric(input$range)), ' Health\nwith ', input$status, ' Status', sep = ''),
-           subtitle = 'The odds of catching a Pokemon increase if a critical catch succeeds\n',
+      labs(title = paste('How a Critical Catch Impacts Chances of Capturing ', input$pokemon, sep = ''),
+           subtitle = paste('At ', scales::percent(as.numeric(input$range)), ' Health with ', input$status, ' Status', sep = ''),
            caption = '\nVisualization by Alex Elfering\nData Sources: Formula Courtesy of The Cave of Dragonflies; Bulbapedia, The Pokemon Company and Nintendo\nBased on Generation VIII; Dusk Balls are only effective at night or in a cave',
            x = '',
            y = '\nOdds of Capture') +
       theme(plot.title = element_text(face = 'bold', 
-                                      size = 20, 
+                                      size = 18, 
                                       color = 'black',
                                       family = 'Arial'),
             legend.position = 'top',
@@ -461,7 +455,7 @@ server <- function(input, output, session){
                                        family = 'Arial'),
             legend.title = element_text(size = 16, 
                                         family = 'Arial'),
-            plot.subtitle = element_text(size = 19, 
+            plot.subtitle = element_text(size = 17, 
                                          family = 'Arial', 
                                          color = 'black'),
             plot.caption = element_text(size = 16, 
