@@ -24,8 +24,8 @@ get_osm_data <- function (city, features) {
 }
 
 
-oka_large <- get_osm_data("Okinawa, Japan", features = large_features)
-oka_small <- get_osm_data("Okinawa, Japan", features = small_features)
+oka_large <- get_osm_data("Okinawa", features = large_features)
+oka_small <- get_osm_data("Okinawa", features = small_features)
 
 # Plot --------------------------------------------------------------------
 Okinawa <- ggplot(data = oka_small$osm_lines)+
@@ -41,7 +41,7 @@ Okinawa <- ggplot(data = oka_small$osm_lines)+
   )
 
 ggsave(plot = Okinawa, 
-       filename = 'Okinawa.png',
+       filename = 'Okinawa1.png',
        width = 12,
        height = 15,
        units = 'in')
