@@ -31,7 +31,7 @@ oka_small <- get_osm_data("Okinawa", features = small_features)
 Okinawa <- ggplot(data = oka_small$osm_lines)+
   geom_sf(color = "gray15", 
           size = 0.2) +
-  geom_sf(data = jlm_large$osm_lines,
+  geom_sf(data = oka_large$osm_lines,
           color = 'black',
           size = 0.4) +
   theme (
