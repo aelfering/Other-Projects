@@ -12,7 +12,7 @@ grocery_store_df <- grocery_spend %>%
   mutate(store = ifelse(transaction %in% top_stores, transaction, "Other"),
          store = factor(store, levels = c(top_stores, "Other")))
   
-grocery_store_df %>%
+grocery_percent_chart <- grocery_store_df %>%
   ggplot() + 
   geom_hline(yintercept = 1.05,
              color = NA) +
@@ -40,7 +40,8 @@ grocery_store_df %>%
                               'Feb 22', 
                               'Mar 22')) +
   labs(title = 'Where do my Grocery Dollars Go?',
-       subtitle = 'Share of Grocery Spending by Month',
+       subtitle = 'Share of Grocery Spending by Store each Month',
+       caption = 'Alex Elfering | 30 Day Chart Challenge Day #1: Part-to-Whole',
        fill = '',
        x = '',
        y = '') +
@@ -69,3 +70,9 @@ grocery_store_df %>%
         axis.line = element_line(colour = "#222222", linetype = "solid"),
         panel.grid.major.y = element_line(colour = "#c1c1c1", linetype = "dashed"),
         panel.grid.major.x = element_blank()) 
+
+ggsave(grocery_percent_chart,
+       file = 'Grocery Percent Chart.png', 
+       width = 6, 
+       height = 6, 
+       units = 'in')
