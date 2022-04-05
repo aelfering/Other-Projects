@@ -31,7 +31,7 @@ aa_oma_stats <- aa_oma %>%
          pct_delayed = delayed/sum(delayed),
          rank_flights = dense_rank(desc(flights)),
          rank_delayed = dense_rank(desc(delayed)),
-         delayed_50 = (75*delayed)/flights,
+         delayed_50 = (50)/flights,
          rank_per_50 = dense_rank(desc(delayed_50))) %>%
   arrange(desc(flights))
 
