@@ -1,23 +1,28 @@
-# #30DayChartChallenge Day 3
+# #30DayChartChallenge Day 5
 # Slope
 
 library(tidyverse)
-#library(zoo)
 library(ggplot2)
 library(lubridate)
 library(ggrepel)
 
 aa_oma <- read.csv('~/aa oma flights.csv')
+aa_oma_cancellations <- read.csv('~/aa oma cancellations.csv')
 
 windowsFonts(sans="IBM Plex Sans")
 loadfonts(device="win")
 loadfonts(device="postscript")
 
 # quick data cleaning
-dsm_flights_names <- c('carrier_code', 'date', 'flight_number', 'tail_number', 'destination_airport', 'sch_dep_time', 'act_dep_time', 'sch_elap_time', 'act_elap_time', 'dep_del', 'wheels_off_time', 'taxi_out_time', 'delay_carrier', 'delay_weather', 'delay_nas', 'delay_security', 'delay_late_air_arrival')
-colnames(aa_oma) <- dsm_flights_names
+oma_flights_names <- c('carrier_code', 'date', 'flight_number', 'tail_number', 'destination_airport', 'sch_dep_time', 'act_dep_time', 'sch_elap_time', 'act_elap_time', 'dep_del', 'wheels_off_time', 'taxi_out_time', 'delay_carrier', 'delay_weather', 'delay_nas', 'delay_security', 'delay_late_air_arrival')
+colnames(aa_oma) <- oma_flights_names
 
-aa_oma_stats <- aa_oma %>%
+oma_cancel_names <- c('carrier_code', 'date', 'flight_number', 'tail_number', 'destination')
+colnames(aa_oma_cancellations) <- oma_cancel_names
+
+aa_oma_no_cancel <- anti_join(aa_oma, aa_oma_cancellations )
+
+aa_oma_stats <- aa_oma_no_cancel %>%
   mutate(delayed = ifelse(dep_del > 15, 1, 0),
          flights = 1,
          date = mdy(date)) %>%
@@ -26,12 +31,12 @@ aa_oma_stats <- aa_oma %>%
   summarise(delayed = sum(delayed),
             flights = sum(flights)) %>%
   ungroup() %>%
-  filter(flights > 50) %>%
+  filter(flights >= 50) %>%
   mutate(pct_flight = flights/sum(flights),
-         pct_delayed = delayed/sum(delayed),
+         pct_delayed = delayed/flights,
          rank_flights = dense_rank(desc(flights)),
          rank_delayed = dense_rank(desc(delayed)),
-         delayed_50 = (50*delayed)/flights,
+         delayed_50 = (100*delayed)/flights,
          rank_per_50 = dense_rank(desc(delayed_50))) %>%
   arrange(desc(flights))
 
@@ -83,7 +88,7 @@ aa_chart <- aa_oma_select %>%
                   mapping = aes(x = stat,
                                 y = rank,
                                 label = scales::comma(val)),
-                  hjust = 2) + 
+                  hjust = 3) + 
   #geom_text_repel(data = aa_oma_select %>% filter(stat == 'delays'),
   #                mapping = aes(x = stat,
   #                              y = rank,
@@ -97,33 +102,35 @@ aa_chart <- aa_oma_select %>%
                                  label = scales::comma(val)),
                    #label.size = NA,
                    hjust = -2) + 
-  scale_y_reverse() +
+  #scale_y_reverse() +
   scale_x_discrete(position = 'top',
                    labels = c('Total Flights',
-                              'Delays per 50\nFlights Flown')) +
+                              'Delays per 100\nFlights Flown')) +
   scale_color_manual(values = c('#a6cee3',
                                 '#1f78b4',
                                 '#b2df8a',
                                 '#33a02c')) +
-  labs(title = '2019 OMA AA Outbound Flights Flown vs. Flights Delayed',
-       subtitle = 'Rank of flights flown vs. flights delayed per 50 flights by destination',
-       caption = 'Alex Elfering | 30 Day Chart Challenge Day #5: Slope\nSource: Bureau of Transportation Stats',
+  scale_y_reverse() +
+  labs(title = 'OMA-ORD on AA Had the Most Delays in 2019 Despite Fewer Flights',
+       subtitle = 'Rank of AA outbound flights flown vs. flights delayed per 100 flights by destination',
+       caption = 'Alex Elfering | 30 Day Chart Challenge Day #5: Slope\nSource: Bureau of Transportation Stats | Note: Excludes destinations with < 50 annual flights and regional affiliates',
        color = 'Destination:',
        x = '',
        y = '') +
   #scale_y_continuous(position = 'right') +
-  theme(plot.title = element_text(face = 'bold', size = 18),
-        plot.subtitle = element_text(size = 16),
+  theme(plot.title = element_text(face = 'bold', size = 16),
+        plot.subtitle = element_text(size = 14),
         legend.position = 'top',
         legend.background=element_blank(),
         legend.key=element_blank(),
         legend.text = element_text(size = 12),
         plot.title.position = "plot",
         plot.caption.position =  "plot",
-        plot.caption = element_text(size = 12),
+        plot.caption = element_text(size = 9),
         axis.title = element_text(size = 12),
-        axis.text.y.left = element_text(size = 12, color = 'black'),
-        axis.text.x.top = element_text(size = 12, color = 'black'),
+        #axis.text.y.left = element_text(size = 12, color = 'black'),
+        axis.text.x.top = element_text(size = 12, face = 'bold', color = 'black'),
+        axis.text.y.left = element_blank(),
         #axis.line.y = element_blank(),
         axis.ticks.length.x.top = unit(.5, "cm"),
         axis.ticks.y.left = element_blank(),
@@ -131,7 +138,7 @@ aa_chart <- aa_oma_select %>%
         strip.text = ggplot2::element_text(size = 12, hjust = 0, face = 'bold', color = 'black'),
         strip.background = element_rect(fill = NA),
         panel.background = ggplot2::element_blank(),
-        axis.line = element_line(colour = "#222222", linetype = "solid"),
+        #axis.line = element_line(colour = "#222222", linetype = "solid"),
         panel.grid.major.y = element_blank(),
         panel.grid.major.x = element_blank()) 
   
@@ -139,7 +146,7 @@ aa_chart
 
 ggsave(aa_chart,
        file = 'American Airlines Slope.png', 
-       width = 7, 
+       width = 7.5, 
        height = 6, 
        units = 'in')
   
